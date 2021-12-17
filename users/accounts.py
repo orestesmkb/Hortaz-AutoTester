@@ -2,6 +2,7 @@
 import pytest
 import time
 import json
+import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
@@ -9,6 +10,60 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
+
+def sign_up_requests():
+    url = "https://apihortaz.bigu.digital/api/v1/user/create"
+
+    user_data_json = {
+        "address": "AutoTester1",
+        "cellPhoneNumber": "111111111111",
+        "cnpj": "",
+        "cpf": "11111111111",
+        "email": "AutoTester1",
+        "gpsLatitude": 0,
+        "gpsLongitude": 0,
+        "name": "AutoTester1",
+        "password": "12345678",
+        "paymentInfo": [
+            {
+                "name": "string",
+                "pixKey": "string"
+            }
+        ],
+        "profile_pic_url": "string",
+        "userTypes": [
+            "BUYER"
+        ],
+        "validated": True
+    }
+
+    r = requests.post(url, json=user_data_json)
+    print(r.status_code)
+    print(r.content)
+    print(r)
+    return r.status_code
+
+
+def test_sign_up():
+    assert sign_up_requests() == 200
+
+
+def login_requests():
+    url = "https://apihortaz.bigu.digital/login"
+
+    login_data_json = {"cellPhoneNumber": "111111111111",
+                       "password": "12345678"}
+
+    r = requests.post(url, json=login_data_json)
+    print(r.status_code)
+    print(r.content)
+    print(r)
+    return r.status_code
+
+
+def test_login():
+    assert login_requests() == 200
 
 
 class HortazTester:
@@ -44,3 +99,5 @@ class HortazTester:
         # 10 | click | css=.button-1 |
         self.driver.find_element(By.CSS_SELECTOR, ".button-1").click()
 
+# sign_up_requests()
+# login_requests()
